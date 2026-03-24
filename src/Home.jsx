@@ -13,7 +13,7 @@ function Home() {
 
     const [helpModalOpen, setHelpModalOpen] = useState(false)
 
-    const play_hover_audio = useAudio("/hover.mp3")
+    const play_hover_audio = useAudio("hover.mp3")
 
     const slots_grid_ref = useRef(null)
 
@@ -23,7 +23,7 @@ function Home() {
 
     useEffect(() => { // Fetch data first
         const fetchEpisode = async () => {
-            const file = await (await fetch(`/character_list.json`))
+            const file = await (await fetch(`character_list.json`))
             const fileobject = await file.json();
             setCharacters(fileobject)
         };
