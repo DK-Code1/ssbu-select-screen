@@ -1,16 +1,12 @@
-# React + Vite
+# ssbu-select-screen
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Smash Bros Ultimate selection screen recreated in a browser, using React.
+Try it on pages.
 
-Currently, two official plugins are available:
+# WIP
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## React Compiler
+# DISCLAIMER
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+This project is not a playable game nor is intended to be a replacement of the original game, its only purpose is to showcase layout creation in HTML and CSS.
+All original assets and characters belong to Nintendo and their respective owners.
