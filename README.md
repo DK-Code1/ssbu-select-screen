@@ -1,7 +1,12 @@
 # ssbu-select-screen
 
 Smash Bros Ultimate selection screen recreated in a browser, using React.
-Try it on pages.
+
+<p align="center">
+  <a href="https://dk-code1.github.io/simpsons-image-search/">
+    <img src="https://img.shields.io/badge/VISIT%20ON%20PAGES-blue?style=for-the-badge&logo=github">
+  </a>
+</p>
 
 # WIP
 
