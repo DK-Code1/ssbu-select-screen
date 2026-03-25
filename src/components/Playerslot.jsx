@@ -84,7 +84,7 @@ export function Playerslot({ player_number, character, total_slots }) {
 
                     {currentSkin &&
                         <img ref={character_image_ref} style={{ scale: character_sizes[total_slots] }} onContextMenu={toggle_skin_back} onClick={toggle_skin} draggable={false} key={character?.image} 
-                        src={`${import.meta.env.VITE_ASSETS_SOURCE}/characters/${currentSkin}`} >
+                        src={`${import.meta.env.VITE_ASSETS_SOURCE}characters/${currentSkin}`} >
                             
                         </img>
 

@@ -167,7 +167,9 @@ function Home() {
                         <div className='top-bar-combatmode'>Solo Battle</div>
                         <div className='top-bar-combatmode-border'></div>
 
-                        <button onClick={randomize_characters} className='top-bar-randomize'>Randomize</button>
+                        <button onClick={randomize_characters} className='top-bar-randomize'>
+                            <img src='random.png'></img>
+                        </button>
                         <div className='top-bar-randomize-border'></div>
 
                     </div>

@@ -230,6 +230,23 @@ text-shadow:
 
 }
 
+.top-bar-randomize img{
+  height: 100%;
+  width: auto;
+  margin-right: 20%;
+}
+
+
+.top-bar-randomize:hover img{
+  filter: brightness(50%) sepia(1) hue-rotate(10deg) saturate(1000%);
+}
+
+.top-bar-randomize:active img{
+  transition: all 0.1s;
+  transform: scale(1.25);
+
+}
+
 .top-bar-randomize-border{
   position: absolute;
   right: 0;
