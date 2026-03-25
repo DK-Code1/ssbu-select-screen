@@ -204,12 +204,12 @@ function Home() {
 
                         <button ref={add_slot_button} className='button-plus' onClick={increase_player_slot} >
 
-                            <img src='/add.png'></img>
+                            <img src='add.png'></img>
                         </button>
                         <div className='button-plus-border' ></div>
 
                         <button ref={remove_slot_button} className='button-minus' onClick={decrease_player_slot}>
-                            <img src='/remove.png'></img>
+                            <img src='remove.png'></img>
                         </button>
                         <div className='button-minus-border' ></div>
                     </div>
