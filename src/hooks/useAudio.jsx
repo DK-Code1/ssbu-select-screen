@@ -6,7 +6,7 @@ export function useAudio(audio_path, max_intervale=100) {
     const last_play = useRef(Date.now()) // Timer for audio
     
 
-    function play_audio() {
+    async function play_audio() {
 
         let audio = new Audio(audio_path)
         audio.autoplay = false

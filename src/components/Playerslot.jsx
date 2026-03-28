@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 
-export function Playerslot({ player_number, character, total_slots }) {
+export function Playerslot({ player_number, character, total_slots, selected}) {
     const [currentSkin, setCurrentSkin] = useState(null)
     const character_image_ref = useRef(null)
 
@@ -43,6 +43,16 @@ export function Playerslot({ player_number, character, total_slots }) {
         }
     }, [character])
 
+    useEffect(()=>{
+
+        if(!selected){
+            return
+        }
+
+        character_image_ref.current.classList.add("final-selected")
+
+    },[selected])
+
     const character_sizes = {
         5: 1.20,
         6: 1.15,
@@ -57,21 +67,6 @@ export function Playerslot({ player_number, character, total_slots }) {
         8: "130%"
 
     }
-
-    // useEffect(()=>{
-    //     if (!character_image_ref.current){
-    //         return
-    //     }
-
-    //     if (total_slots > 4){
-    //         character_image_ref.current.style.transform = `translate(-50%, -60%) scale(${character_sizes[total_slots]})`
-    //     }
-    //     else{
-    //         character_image_ref.current.style.transform = ""
-
-    //     }
-
-    // },[total_slots])
 
     return (
         <>
