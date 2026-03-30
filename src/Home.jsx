@@ -54,7 +54,8 @@ function Home() {
 
     function resetAnimation() {
         let animations = document.getAnimations("selected")
-        let last_frame = animations[0].currentTime
+        let last_frame = Math.trunc(animations[0].currentTime)
+
         animations.forEach((animation, index) => {
             if (animation.animationName == "border-glow") {
                 animation.currentTime = last_frame
@@ -81,54 +82,31 @@ function Home() {
 
     }, [playerSlots])
 
-    // function update_character_cell_color(){
-    //     console.log(characters_grid_ref.current)
-    //     if (!characters_grid_ref.current.childNodes.length){
-    //         return
-    //     }
-
-    //     let cell_list = characters_grid_ref.current.childNodes
-    //     console.log(cell_list)
-
-    //     selectedCharacters.forEach((entry, index)=>{
-    //         console.log(entry, index)
-    //         cell_list[entry].classList.add(`selected`, player_colors[index])
-    //     })
+    // const player_colors = {
+    //     0: "red",
+    //     1: "blue",
+    //     2: "yellow",
+    //     3: "green",
+    //     4: "orange",
+    //     5: "cyan",
+    //     6: "pink",
+    //     7: "purple",
     // }
 
-    function handle_mouse(e) {
-        if(cursor2_ref.current){
-        cursor_ref.current.style.left = `${e.clientX}px`
-        cursor_ref.current.style.top = `${e.clientY}px`
-        }
 
-    }
-
-    const player_colors = {
-        0: "red",
-        1: "blue",
-        2: "yellow",
-        3: "green",
-        4: "orange",
-        5: "cyan",
-        6: "pink",
-        7: "purple",
-    }
-
-
-    async function select_character(player_slot, character){
+    async function select_character(player_slot, character){ // Select a character for a slot
         console.log(player_slot,character )
         console.log(player_slot -1)
         let character_cell = characters_grid_ref.current.children[character]
 
         character_cell.classList.add("selected")
-        setSelectDone([0,0,0,0,0,0,0,0])
+        setSelectDone(selectDone.map((item,index) => index == player_slot-1 ? 0 : item))
         await sleep(0)
         setSelectDone(selectDone.map((item,index) => index == player_slot-1 ? 1 : item))
         console.log(selectDone)
     }
 
-    function check_hand_selection() {
+    function check_hand_selection() { // Check hand character selection
         let cursor_x = cursor2_ref.current.x
         let cursor_y = cursor2_ref.current.y
         let selected_element = document.elementFromPoint(cursor_x, cursor_y)
@@ -149,135 +127,136 @@ function Home() {
         }
     }
 
-    let move_right_loop = true
-    let moving_right = false
+    let movement ={
+        up : false,
+        right : false,
+        down : false,
+        left : false
+    }
+    let is_moving = false
 
-    let move_up_loop = true
-    let moving_up = false
+    function move_hand(){
 
-    let move_left_loop = true
-    let moving_left = false
-
-    let move_down_loop = true
-    let moving_down = false
-
-
-    function move_right() {
-
-        if (!move_right_loop) {
+        if (!movement.up && !movement.right && !movement.down && !movement.left ){
+            is_moving = false
             return
         }
-        moving_right = true
 
+        let move_x = 0
+        let move_y = 0
+        
+        if (movement.right){
+            move_x += 15
+        }
+        if (movement.left){
+            move_x -= 15
+        }
+
+        if (movement.up){
+            move_y -= 15
+        }
+        if (movement.down){
+            move_y += 15
+        }
+        
         let current_x_position = cursor2_ref.current.x
-        cursor2_ref.current.style.left = `${current_x_position + 15}px`
-        requestAnimationFrame(move_right)
+        let current_y_position = cursor2_ref.current.y
+
+        let new_x_position = current_x_position + move_x
+        let new_y_position = current_y_position + move_y
+
+        if (new_y_position >= 0){ // Don't go outside page
+            cursor2_ref.current.style.top =  `${new_y_position}px`
+        }
+
+        if (new_y_position > window.innerHeight-40){
+            cursor2_ref.current.style.top =  `${window.innerHeight-40}px`
+        }
+
+        if (new_x_position >= 0){
+            cursor2_ref.current.style.left = `${new_x_position}px`
+        }
+
+        if (new_x_position > window.innerWidth-40){
+            cursor2_ref.current.style.left =  `${window.innerWidth-40}px`
+        }
+
         check_hand_selection()
 
+        requestAnimationFrame(move_hand)
     }
 
-    function move_up() {
-        if (!move_up_loop) {
+    function start_movement(){ // Start movement loop
+        if (is_moving){
             return
         }
-
-        moving_up = true
-
-        let current_y_position = cursor2_ref.current.y
-        cursor2_ref.current.style.top = `${current_y_position - 15}px`
-        requestAnimationFrame(move_up)
-                check_hand_selection()
-
+        is_moving = true
+        requestAnimationFrame(move_hand)
     }
 
-    function move_left() {
-        if (!move_left_loop) {
-            return
-        }
-
-        moving_left = true
-
-        let current_x_position = cursor2_ref.current.x
-        cursor2_ref.current.style.left = `${current_x_position - 15}px`
-        requestAnimationFrame(move_left)
-                check_hand_selection()
-
-    }
-
-    function move_down() {
-        if (!move_down_loop) {
-            return
-        }
-
-        moving_down = true
-
-        let current_y_position = cursor2_ref.current.y
-        cursor2_ref.current.style.top = `${current_y_position + 15}px`
-        requestAnimationFrame(move_down)
-                check_hand_selection()
-
+    function check_hand_cursor_character(){
+        select_character(2, selectedCharacters[1])
     }
 
     function handle_key_down(e) {
-
-        if (e.key == "a" && !moving_left) {
-            move_left_loop = true
-            requestAnimationFrame(move_left)
+        console.log(e)
+        if (e.key == "a") {
+            movement.left = true
         }
 
-        if (e.key == "d" && !moving_right) {
-            move_right_loop = true
-            requestAnimationFrame(move_right)
+        if (e.key == "d") {
+            movement.right = true
         }
 
 
-        if (e.key == "w" && !moving_up) {
-            move_up_loop = true
-            requestAnimationFrame(move_up)
+        if (e.key == "w") {
+            movement.up = true
         }
 
-        if (e.key == "s" && !moving_down) {
-            move_down_loop = true
-            requestAnimationFrame(move_down)
+        if (e.key == "s") {
+            movement.down = true
         }
+
+        if (e.key == " "){
+            e.preventDefault()
+            check_hand_cursor_character()
+        }
+
+        start_movement()
 
     }
 
     function handle_key_up(e) {
 
         if (e.key == "d") {
-            move_right_loop = false
-            moving_right = false
+            movement.right = false
         }
 
 
         if (e.key == "w") {
-            move_up_loop = false
-            moving_up = false
+            movement.up = false
         }
 
         if (e.key == "a") {
-            move_left_loop = false
-            moving_left = false
+            movement.left = false
         }
 
         if (e.key == "s") {
-            move_down_loop = false
-            moving_down = false
+            movement.down = false
         }
 
     }
 
     useEffect(() => {
         if (cursor_ref && cursor2_ref) {
-            window.addEventListener("mousemove", handle_mouse)
+            window.addEventListener("mousemove", handle_mouse_hand)
             window.addEventListener("keydown", handle_key_down)
             window.addEventListener("keyup", handle_key_up)
         }
     }, [cursor_ref])
 
 
-    function handle_cursor(e) {
+    function handle_mouse(e) { // Mouse logic
 
         if (!isSelecting) {
             return
@@ -311,6 +290,15 @@ function Home() {
         e.preventDefault()
     }
 
+
+    function handle_mouse_hand(e) { // Player 1 cursor
+        if(cursor_ref.current){
+        cursor_ref.current.style.left = `${e.clientX}px`
+        cursor_ref.current.style.top = `${e.clientY}px`
+        }
+
+    }
+
     function increase_player_slot(e) {
         let current_slots = playerSlots
 
@@ -328,6 +316,8 @@ function Home() {
 
 
     }
+
+    
 
     function decrease_player_slot(e) {
 
@@ -410,7 +400,7 @@ function Home() {
                 </div>
 
 
-                <div ref={characters_grid_ref} className='character-grid' onPointerDown={handle_cursor_down} onPointerMove={handle_cursor} >
+                <div ref={characters_grid_ref} className='character-grid' onPointerDown={handle_cursor_down} onPointerMove={handle_mouse} >
 
                     {characters.map((item, index) => (
                         <Character key={item.character_name} character_number={index} character_name={item.name} icon={item.icon} selected_characters={selectedCharacters.slice(0, playerSlots)} >

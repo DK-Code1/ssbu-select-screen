@@ -4,7 +4,7 @@ export function Character({ character_name, icon, character_number, selected_cha
 
     const character_cell_ref = useRef(null)
 
-    const player_colors = {
+    const player_colors = { // Selected character cell colors
         0: "red",
         1: "blue",
         2: "yellow",
