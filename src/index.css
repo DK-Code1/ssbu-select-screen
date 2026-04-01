@@ -247,42 +247,44 @@ p {
 }
 
 .selected{
-  outline-offset: -2px;
+  outline-style: solid;
+  outline-width: 6px;
+  outline-offset: -4px;
   animation: border-glow 1.5s infinite;
   z-index: 3;
 }
 
 .selected.red{
-    outline: solid 4px red;
+    outline-color: red;
 }
 
 .selected.blue{
-    outline: solid 4px  rgb(0, 96, 255);
+    outline-color: rgb(0, 96, 255);
 
 }
 
 .selected.yellow{
-    outline: solid 4px  rgba(255, 190, 0)
+    outline-color: rgba(255, 190, 0);
 }
 
 .selected.green{
-    outline: solid 4px rgba(0, 255, 0, 1)
+    outline-color: rgba(0, 255, 0, 1);
 }
 
 .selected.orange{
-    outline: solid 4px rgba(255, 128, 0)
+    outline-color: rgba(255, 128, 0);
 }
 
 .selected.cyan{
-    outline: solid 4px rgb(0, 150, 255)
+    outline-color: rgb(0, 150, 255);
 }
 
 .selected.pink{
-    outline: solid 4px rgb(255, 115, 184)
+    outline-color: rgb(255, 115, 184);
 }
 
 .selected.purple{
-    outline: solid 4px rgb(115, 70, 245)
+    outline-color: rgb(115, 70, 245);
 }
 
 
@@ -290,13 +292,13 @@ p {
 
 @keyframes border-glow {
   0%{
-    outline: solid 4px inherit;   
+    
   }
   30%{
-    outline: solid 4px white
+    outline-color:  white;
   }
   100%{
-    outline: solid 4px inherit;  
+    
   }
 }
 
@@ -451,6 +453,7 @@ p {
   gap: .5rem;
   grid-template-columns: repeat(4, 1fr);
   padding: 1% 0rem 0rem 1%;
+  overflow: hidden;
 }
 
 .player-slot-container{
@@ -786,16 +789,23 @@ p {
 
 .hand-cursor:nth-child(1){
   filter:  sepia(0.25) hue-rotate(300deg) saturate(400%);
-
+  left: 17%;
+  bottom: 10%;
 }
 
 .hand-cursor:nth-child(2){
   filter:  sepia(0.25) hue-rotate(180deg) saturate(400%);
+  left: 37%;
+  bottom: 10%;
 
 }
 
 .final-selected{
   animation: select-animation 0.35s ease !important; 
+}
+
+.slot-final-selected{
+  animation: slot-select-animation 0.1s linear !important;
 }
 
 @keyframes select-animation {
@@ -821,5 +831,17 @@ p {
       brightness(1);
 
     transform: scale(1);
+  }
+}
+
+@keyframes slot-select-animation {
+  0%{
+    top: 0px;
+  }
+  50%{
+    top: 10px
+  }
+  100%{
+    top: 0px
   }
 }

@@ -1,8 +1,12 @@
 import { useEffect, useRef, useState } from "react"
+import { useAudio } from "../hooks/useAudio"
 
-export function Playerslot({ player_number, character, total_slots, selected}) {
+export function Playerslot({ player_number, character, total_slots, selected }) {
     const [currentSkin, setCurrentSkin] = useState(null)
     const character_image_ref = useRef(null)
+    const slot_container_ref = useRef(null)
+
+    const play_narrator_audio = useAudio(100)
 
     function toggle_skin(e) {
         let character = currentSkin.split("_0")
@@ -37,21 +41,38 @@ export function Playerslot({ player_number, character, total_slots, selected}) {
         setCurrentSkin(final_skin)
     }
 
-    useEffect(() => {
+    useEffect(() => { // Set skins
         if (character) {
             setCurrentSkin(character.image)
         }
     }, [character])
 
-    useEffect(()=>{
+    useEffect(() => { // Set selected animation
 
-        if(!selected){
+        if (!selected) {
             return
         }
 
+        console.log("from slot: ", selected)
+
+
+
         character_image_ref.current.classList.add("final-selected")
 
-    },[selected])
+        slot_container_ref.current.classList.remove("slot-final-selected")
+
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                slot_container_ref.current.classList.add("slot-final-selected")
+            })
+
+        })
+
+        play_narrator_audio(`${import.meta.env.VITE_ASSETS_SOURCE}audios/en/${character.audio}`)
+
+
+
+    }, [selected])
 
     const character_sizes = {
         5: 1.20,
@@ -70,17 +91,17 @@ export function Playerslot({ player_number, character, total_slots, selected}) {
 
     return (
         <>
-            <div className="player-slot-container">
+            <div ref={slot_container_ref} className="player-slot-container">
                 <div className='player-slot-corner-border' ></div>
                 <div className="player-slot">
-                    <div style={{backgroundSize: background_size[total_slots] ?? ''}} className="player-slot-background"></div>
+                    <div style={{ backgroundSize: background_size[total_slots] ?? '' }} className="player-slot-background"></div>
 
 
 
                     {currentSkin &&
-                        <img ref={character_image_ref} style={{ scale: character_sizes[total_slots] }} onContextMenu={toggle_skin_back} onClick={toggle_skin} draggable={false} key={character?.image} 
-                        src={`${import.meta.env.VITE_ASSETS_SOURCE}characters/${currentSkin}`} >
-                            
+                        <img ref={character_image_ref} style={{ scale: character_sizes[total_slots] }} onContextMenu={toggle_skin_back} onClick={toggle_skin} draggable={false} key={character?.image}
+                            src={`${import.meta.env.VITE_ASSETS_SOURCE}characters/${currentSkin}`} >
+
                         </img>
 
                     }
@@ -93,9 +114,9 @@ export function Playerslot({ player_number, character, total_slots, selected}) {
                         </p>
                     </div>
 
-                    <div style={{width: total_slots == 8 ? '103%' : ''}} className="player-status-border"> </div>
+                    <div style={{ width: total_slots == 8 ? '103%' : '' }} className="player-status-border"> </div>
 
-                    <div style={{width: total_slots == 8 ? '100%' : ''}} className="player-status">
+                    <div style={{ width: total_slots == 8 ? '100%' : '' }} className="player-status">
                         <p className="player-status-number">
                             {`P${player_number}`}
                         </p>

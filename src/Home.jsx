@@ -10,7 +10,7 @@ function Home() {
     const [isSelecting, setIsSelecting] = useState(true)
     const [selectedCharacters, setSelectedCharacters] = useState([0, 8, 1, 10, 11, 31, 64, 73])
 
-    const [selectDone, setSelectDone] = useState([0,0,0,0,0,0,0,0]) // If slot finished selecting character. 0 no, 1 yes.
+    const [selectDone, setSelectDone] = useState([0, 0, 0, 0, 0, 0, 0, 0]) // If slot finished selecting character. 0 no, 1 yes.
 
     // const [selectedCharacters, setSelectedCharacters] = useState([84, 84, 84, 84, 84, 84, 84, 84]) //DEBUG
 
@@ -18,15 +18,15 @@ function Home() {
 
     const selectedCharacters_ref = useRef(null)
 
+    const play_hover_audio = useAudio()
+    const play_select_audio = useAudio(50)
 
-
-    const play_hover_audio = useAudio("hover.mp3")
 
     const characters_grid_ref = useRef(null)
     const slots_grid_ref = useRef(null)
 
-    const add_slot_button = useRef(null)
-    const remove_slot_button = useRef(null)
+    const add_slot_button_ref = useRef(null)
+    const remove_slot_button_ref = useRef(null)
 
     const cursor_ref = useRef(null)
     const cursor2_ref = useRef(null)
@@ -42,15 +42,15 @@ function Home() {
         fetchData();
     }, [])
 
-    useEffect(()=>{
-        if (!selectedCharacters){
+    useEffect(() => {
+        if (!selectedCharacters) {
             return
         }
         selectedCharacters_ref.current = selectedCharacters
         //update_character_cell_color()
         resetAnimation()
 
-    },[selectedCharacters])
+    }, [selectedCharacters])
 
     function resetAnimation() {
         let animations = document.getAnimations("selected")
@@ -67,17 +67,17 @@ function Home() {
     useEffect(() => { // Slots number logic
 
         if (playerSlots == 2) {
-            remove_slot_button.current.disabled = true;
+            remove_slot_button_ref.current.disabled = true;
         }
         else {
-            remove_slot_button.current.disabled = "";
+            remove_slot_button_ref.current.disabled = "";
         }
 
         if (playerSlots == 8) {
-            add_slot_button.current.disabled = true
+            add_slot_button_ref.current.disabled = true
         }
         else {
-            add_slot_button.current.disabled = ""
+            add_slot_button_ref.current.disabled = ""
         }
 
     }, [playerSlots])
@@ -94,15 +94,20 @@ function Home() {
     // }
 
 
-    async function select_character(player_slot, character){ // Select a character for a slot
-        console.log(player_slot,character )
-        console.log(player_slot -1)
-        let character_cell = characters_grid_ref.current.children[character]
+    async function select_character(player_slot, character) { // Select a character for a slot
+        console.log(player_slot, character)
+        console.log(player_slot - 1)
 
-        character_cell.classList.add("selected")
-        setSelectDone(selectDone.map((item,index) => index == player_slot-1 ? 0 : item))
+        //let character_cell = characters_grid_ref.current.children[character]
+
+        //character_cell.classList.add("selected")
+
+        setSelectDone(selectDone.map((item, index) => index == player_slot - 1 ? 0 : item)) // Re trigger select animation
+
         await sleep(0)
-        setSelectDone(selectDone.map((item,index) => index == player_slot-1 ? 1 : item))
+
+        setSelectDone(selectDone.map((item, index) => index == player_slot - 1 ? 1 : item))
+        play_select_audio("select.mp3")
         console.log(selectDone)
     }
 
@@ -115,70 +120,70 @@ function Home() {
 
             let selected_index = selected_element.parentElement.id
 
-            if (!selected_index){ // not the selected grid
+            if (!selected_index) { // not the selected grid
                 return
             }
-            
+
             if (Number(selected_index) != selectedCharacters_ref.current[1]) { // Not the already selected character cell
 
-            setSelectedCharacters(selectedCharacters_ref.current.map((item, index) => index == 1 ? Number(selected_index) : item))
-            play_hover_audio()
-        }
+                setSelectedCharacters(selectedCharacters_ref.current.map((item, index) => index == 1 ? Number(selected_index) : item))
+                play_hover_audio("hover.mp3")
+            }
         }
     }
 
-    let movement ={
-        up : false,
-        right : false,
-        down : false,
-        left : false
+    let movement = {
+        up: false,
+        right: false,
+        down: false,
+        left: false
     }
     let is_moving = false
 
-    function move_hand(){
+    function move_hand() {
 
-        if (!movement.up && !movement.right && !movement.down && !movement.left ){
+        if (!movement.up && !movement.right && !movement.down && !movement.left) {
             is_moving = false
             return
         }
 
         let move_x = 0
         let move_y = 0
-        
-        if (movement.right){
+
+        if (movement.right) {
             move_x += 15
         }
-        if (movement.left){
+        if (movement.left) {
             move_x -= 15
         }
 
-        if (movement.up){
+        if (movement.up) {
             move_y -= 15
         }
-        if (movement.down){
+        if (movement.down) {
             move_y += 15
         }
-        
+
         let current_x_position = cursor2_ref.current.x
         let current_y_position = cursor2_ref.current.y
 
         let new_x_position = current_x_position + move_x
         let new_y_position = current_y_position + move_y
 
-        if (new_y_position >= 0){ // Don't go outside page
-            cursor2_ref.current.style.top =  `${new_y_position}px`
+        if (new_y_position >= 0) { // Don't go outside page
+            cursor2_ref.current.style.top = `${new_y_position}px`
         }
 
-        if (new_y_position > window.innerHeight-40){
-            cursor2_ref.current.style.top =  `${window.innerHeight-40}px`
+        if (new_y_position > window.innerHeight - 40) {
+            cursor2_ref.current.style.top = `${window.innerHeight - 40}px`
         }
 
-        if (new_x_position >= 0){
+        if (new_x_position >= 0) {
             cursor2_ref.current.style.left = `${new_x_position}px`
         }
 
-        if (new_x_position > window.innerWidth-40){
-            cursor2_ref.current.style.left =  `${window.innerWidth-40}px`
+        if (new_x_position > window.innerWidth - 40) {
+            cursor2_ref.current.style.left = `${window.innerWidth - 40}px`
         }
 
         check_hand_selection()
@@ -186,20 +191,19 @@ function Home() {
         requestAnimationFrame(move_hand)
     }
 
-    function start_movement(){ // Start movement loop
-        if (is_moving){
+    function start_movement() { // Start movement loop
+        if (is_moving) {
             return
         }
         is_moving = true
         requestAnimationFrame(move_hand)
     }
 
-    function check_hand_cursor_character(){
+    function check_hand_cursor_character() {
         select_character(2, selectedCharacters[1])
     }
 
     function handle_key_down(e) {
-        console.log(e)
         if (e.key == "a") {
             movement.left = true
         }
@@ -217,7 +221,7 @@ function Home() {
             movement.down = true
         }
 
-        if (e.key == " "){
+        if (e.key == " ") {
             e.preventDefault()
             check_hand_cursor_character()
         }
@@ -262,7 +266,7 @@ function Home() {
             return
         }
         let selected_index = e.target.parentElement.id
-        
+
         if (!selected_index) { // Not a character cell
             return
         }
@@ -270,7 +274,7 @@ function Home() {
         if (selected_index != selectedCharacters[0]) { // Not the already selected character cell
 
             setSelectedCharacters(selectedCharacters.map((item, index) => index == 0 ? Number(selected_index) : item))
-            play_hover_audio()
+            play_hover_audio("hover.mp3")
         }
 
     }
@@ -279,22 +283,24 @@ function Home() {
 
         let selected = e.target.parentElement.id
 
-        if (!selected){
+        if (!selected) {
             return
         }
 
+        setSelectedCharacters(selectedCharacters_ref.current.map((item, index) => index == 0 ? Number(selected) : item))
+
         select_character(1, Number(selected))
 
-        setIsSelecting(!isSelecting)
+        // setIsSelecting(!isSelecting)
 
         e.preventDefault()
     }
 
 
     function handle_mouse_hand(e) { // Player 1 cursor
-        if(cursor_ref.current){
-        cursor_ref.current.style.left = `${e.clientX}px`
-        cursor_ref.current.style.top = `${e.clientY}px`
+        if (cursor_ref.current) {
+            cursor_ref.current.style.left = `${e.clientX}px`
+            cursor_ref.current.style.top = `${e.clientY}px`
         }
 
     }
@@ -303,7 +309,7 @@ function Home() {
         let current_slots = playerSlots
 
         if (current_slots == 8) {
-            add_slot_button.current.disabled = true
+            add_slot_button_ref.current.disabled = true
             return
         }
 
@@ -317,7 +323,6 @@ function Home() {
 
     }
 
-    
 
     function decrease_player_slot(e) {
 
@@ -348,7 +353,7 @@ function Home() {
             await sleep(50 + slot_number * 2)
             let new_number = Math.floor(Math.random() * 83)
 
-            play_hover_audio()
+            play_hover_audio("hover.mp3")
             setSelectedCharacters(prev => prev.map((item, index) => index == slot_number ? new_number : item))
         }
 
@@ -403,7 +408,8 @@ function Home() {
                 <div ref={characters_grid_ref} className='character-grid' onPointerDown={handle_cursor_down} onPointerMove={handle_mouse} >
 
                     {characters.map((item, index) => (
-                        <Character key={item.character_name} character_number={index} character_name={item.name} icon={item.icon} selected_characters={selectedCharacters.slice(0, playerSlots)} >
+                        <Character key={item.character_name} character_number={index} character_name={item.name} icon={item.icon} 
+                        selected_characters={selectedCharacters.slice(0, playerSlots)} >
 
                         </Character>
 
@@ -429,13 +435,13 @@ function Home() {
 
                     <div className='player-bar-add-players'>
 
-                        <button ref={add_slot_button} className='button-plus' onClick={increase_player_slot} >
+                        <button ref={add_slot_button_ref} className='button-plus' onClick={increase_player_slot} >
 
                             <img src='add.png'></img>
                         </button>
                         <div className='button-plus-border' ></div>
 
-                        <button ref={remove_slot_button} className='button-minus' onClick={decrease_player_slot}>
+                        <button ref={remove_slot_button_ref} className='button-minus' onClick={decrease_player_slot}>
                             <img src='remove.png'></img>
                         </button>
                         <div className='button-minus-border' ></div>

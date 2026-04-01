@@ -1,20 +1,18 @@
 import { useRef } from "react"
 
-export function useAudio(audio_path, max_intervale=100) {
+export function useAudio(max_intervale=100) {
 
 
     const last_play = useRef(Date.now()) // Timer for audio
     
-
-    async function play_audio() {
-
+    async function play_audio(audio_path) {
         let audio = new Audio(audio_path)
         audio.autoplay = false
         audio.volume = 0.25
         audio.play()
     }
 
-    function play_audio_timer() {
+    function play_audio_timer(audio_path) {
 
         let last_timer = last_play.current
 
@@ -22,7 +20,7 @@ export function useAudio(audio_path, max_intervale=100) {
 
         if (current_time - last_timer > max_intervale) {
             last_play.current = current_time
-            play_audio()
+            play_audio(audio_path)
         }
 
     }

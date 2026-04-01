@@ -1,8 +1,6 @@
 import { React, useEffect, useRef } from 'react'
 
 
-
-
 export const Modal = ({ isOpen, close, children }) => {
 
     const maindiv = useRef(null)
