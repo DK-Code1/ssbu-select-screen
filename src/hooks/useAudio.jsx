@@ -14,6 +14,10 @@ export function useAudio(max_intervale=100) {
 
     function play_audio_timer(audio_path) {
 
+        if (!audio_path){
+            return
+        }
+
         let last_timer = last_play.current
 
         let current_time = Date.now()

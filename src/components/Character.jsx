@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react"
 
-export function Character({ character_name, icon, character_number, selected_characters}) {
+export function Character({ character_name, icon, character_number, selected_color}) {
 
     const character_cell_ref = useRef(null)
 
@@ -20,15 +20,14 @@ export function Character({ character_name, icon, character_number, selected_cha
             return
         }
 
-        character_cell_ref.current.className = `character-cell`
-
-        if (selected_characters.some(selected => selected == character_number))
-        {
-            let color = player_colors[selected_characters.indexOf(character_number)]
-            character_cell_ref.current.classList.add(`selected`, color)
-
+        if (selected_color < 0){
+            character_cell_ref.current.className = `character-cell`
+            return
         }
-    },[selected_characters])
+
+        character_cell_ref.current.classList.add(`selected`, player_colors[selected_color])
+
+    },[selected_color])
 
     return (
         <div ref={character_cell_ref} id={character_number} className={`character-cell`}>

@@ -16,6 +16,7 @@ public/characters/
 public/icons/
 public/iconscompressed/
 public/audios/
+public/miniicons/
 
 # Editor directories and files
 .vscode/*
